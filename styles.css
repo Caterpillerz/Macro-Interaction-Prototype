@@ -1,0 +1,35 @@
+body {
+    background-color: #6ed1ff;
+}
+
+h1 {
+    text-align: center;
+    /* I'm using border attributes to help me visually debug things */
+    border: black 2px solid;
+}
+
+#main-content {
+    display: flex;
+}
+
+#video-section {
+    border: black 2px solid;
+}
+
+
+#world-container {
+    position: relative;
+    /* create a box to fit a clipped image of the world into. */
+    height: 600px;
+    width: 600px;
+    /* ------------------------------------------------------ */
+    margin: auto;
+    border: black 2px solid;
+}
+
+#world-container img {
+    position: absolute;
+    /* the "world" fits perfectly into its container */
+    clip: rect(0, 600px, 600px, 0);
+    border: black 2px solid;
+}

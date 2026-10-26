@@ -6,23 +6,37 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
+        <link href="styles.css" rel="stylesheet">
     </head>
     <body>
-        <video id="video" width="640" height="480" autoplay></video>
+        <h1>Shapeshift with your body!</h1>
 
-        <h2>Sample pose markers (one person only)</h2>
-        <h3>15 (left wrist) and 16 (right wrist), x and y values only</h3>
-        <p id="left-wrist"></p>
-        <p id="right-wrist"></p>
-        <p>
-            Find map
-            <a
-                href="https://developers.google.com/edge/mediapipe/solutions/vision/pose_landmarker#pose_landmarker_model"
-                target="_blank"
-                >here</a
-            >.
-        </p>
+        <div id="main-content">
+            <div id="game">
+                <div id="world-container">
+                    <img src="assets/gameEnvironment.png" alt="the environment of our game" width="1800px">
+                </div>
+            </div>
+            <div id="video-section">
+                <div>
+                    <video id="video" width="240" height="180" autoplay></video>
+                </div>
+                <h2>Sample pose markers (one person only)</h2>
+                <h3>15 (left wrist) and 16 (right wrist), x and y values only</h3>
+                <p id="left-wrist"></p>
+                <p id="right-wrist"></p>
+                <p>
+                    Find map
+                    <a
+                        href="https://developers.google.com/edge/mediapipe/solutions/vision/pose_landmarker#pose_landmarker_model"
+                        target="_blank"
+                        >here</a
+                    >.
+                </p>
+            <div>
+        </div>
 
         <script type="module" src="script.js"></script>
+        <script type="module" src="game.js"></script>
     </body>
 </html>

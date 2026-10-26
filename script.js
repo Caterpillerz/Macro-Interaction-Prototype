@@ -6,6 +6,8 @@
 // "python -m http.server 8000" on Windows
 // then, open your browser window at 127.0.0.1:8000
 
+// again, starting with professor guy's example code
+
 import {
   FilesetResolver,
   PoseLandmarker
