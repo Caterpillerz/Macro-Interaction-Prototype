@@ -12,6 +12,7 @@ import {
   FilesetResolver,
   PoseLandmarker
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.mjs";
+import { classifyPose } from "./controls.js";
 
 const vision = await FilesetResolver.forVisionTasks(
   "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
@@ -25,6 +26,7 @@ const poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
 });
 
 const video = document.getElementById("video");
+const gameFrame = document.querySelector("#game-section iframe");
 
 async function startCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
@@ -58,39 +60,64 @@ function renderLoop() {
   requestAnimationFrame(renderLoop);
 }
 
+// A pose has to be seen for a few frames in a row before it counts. This stops
+// the plane twitching when you move between poses.
+const FRAMES_TO_CONFIRM = 3;
+let candidate = "none";
+let candidateFrames = 0;
+let command = "none";
+
 function processPose(results) {
-  if (results.landmarks.length > 0) {
-    const landmarks = results.landmarks[0];
+  const hasPerson = results.landmarks.length > 0;
+  const landmarks = hasPerson ? results.landmarks[0] : null;
+
+  if (hasPerson) {
     const leftWrist = landmarks[15];
     const rightWrist = landmarks[16];
-    console.log(landmarks);
-    const leftWristDisplay = document.getElementById("left-wrist");
-    const rightWristDisplay = document.getElementById("right-wrist");
-    leftWristDisplay.textContent = `Left wrist x: ${leftWrist.x.toFixed(2)} y: ${leftWrist.y.toFixed(2)}`
-    rightWristDisplay.textContent = `Right wrist x: ${rightWrist.x.toFixed(2)} y: ${rightWrist.y.toFixed(2)}`
+    document.getElementById("left-wrist").textContent =
+      `Left wrist x: ${leftWrist.x.toFixed(2)} y: ${leftWrist.y.toFixed(2)}`;
+    document.getElementById("right-wrist").textContent =
+      `Right wrist x: ${rightWrist.x.toFixed(2)} y: ${rightWrist.y.toFixed(2)}`;
   }
 
+  const seen = classifyPose(landmarks, video.videoWidth || 640, video.videoHeight || 480);
+  if (seen === candidate) {
+    candidateFrames++;
+  } else {
+    candidate = seen;
+    candidateFrames = 1;
+  }
+  if (candidateFrames >= FRAMES_TO_CONFIRM) command = candidate;
+
+  document.getElementById("current-pose").textContent = `Current pose: ${command}`;
+
   // call these functions to process the poses
-  strafeLeft(results);
-  strafeRight(results);
-  flyUp(results);
-  diveDown(results);
+  strafeLeft(command);
+  strafeRight(command);
+  flyUp(command);
+  diveDown(command);
+
+  // Tell the game what the pilot is doing. Sent every frame so the game can
+  // tell the camera is still alive (it falls back to arrow keys otherwise).
+  gameFrame.contentWindow.postMessage({ type: "pose", command }, "*");
 }
 
-function strafeLeft(results) {
-
+// The game does the actual steering (see game.js). These hooks stay here in case
+// you want to add something extra when a pose is recognised, such as a sound.
+function strafeLeft(command) {
+  if (command !== "left") return;
 }
 
-function strafeRight(results) {
-
+function strafeRight(command) {
+  if (command !== "right") return;
 }
 
-function flyUp(results) {
-
+function flyUp(command) {
+  if (command !== "up") return;
 }
 
-function diveDown(results) {
-
+function diveDown(command) {
+  if (command !== "down") return;
 }
 
 startCamera();
