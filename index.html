@@ -7,16 +7,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
         <link href="styles.css" rel="stylesheet">
+        <!-- Links to different fonts we will be using -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Knewave&display=swap" rel="stylesheet">
     </head>
     <body>
-        <h1>Shapeshift with your body!</h1>
-
-        <div id="main-content">
-            <div id="game">
-                <div id="world-container">
-                    <img src="assets/gameEnvironment.png" alt="the environment of our game" width="1800px">
-                </div>
-            </div>
+        <div id="content">
+            <!-- The section that has the video playing -->
             <div id="video-section">
                 <div>
                     <video id="video" width="240" height="180" autoplay></video>
@@ -33,10 +31,16 @@
                         >here</a
                     >.
                 </p>
-            <div>
-        </div>
+            </div>
 
+            <!-- Display the game -->
+            <div id="game-section">
+                <iframe src="game.html" width="1200px" height="800px"></iframe>
+            </div>
+        </div>
+        <h1>Flying Game</h1>
+
+        <!-- the script for the video -->
         <script type="module" src="script.js"></script>
-        <script type="module" src="game.js"></script>
     </body>
 </html>

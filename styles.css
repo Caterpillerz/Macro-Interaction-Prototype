@@ -1,35 +1,42 @@
+/* This styles index.html */
+
 body {
-    background-color: #6ed1ff;
-}
-
-h1 {
-    text-align: center;
-    /* I'm using border attributes to help me visually debug things */
-    border: black 2px solid;
-}
-
-#main-content {
-    display: flex;
+    background: linear-gradient(rgb(157, 222, 250) 90%, rgb(91, 176, 255) 99%);
+    /* ignore this for now */
+    /* background: linear-gradient(#6ed1ff, #ffb5a1); */
 }
 
 #video-section {
-    border: black 2px solid;
+    width: 240px;
+    /* border: black 2px solid; */
 }
 
-
-#world-container {
-    position: relative;
-    /* create a box to fit a clipped image of the world into. */
-    height: 600px;
-    width: 600px;
-    /* ------------------------------------------------------ */
-    margin: auto;
-    border: black 2px solid;
+#game-section {
+    width: 1200px;
+    height: 800px;
+    /* centering the game horizontally for now. */
+    margin-left: auto;
+    margin-right: auto;
+    /* border: black 2px solid; */
 }
 
-#world-container img {
-    position: absolute;
-    /* the "world" fits perfectly into its container */
-    clip: rect(0, 600px, 600px, 0);
-    border: black 2px solid;
+iframe {
+    /* get rid of the game screen's stupid border */
+    border: none;
+}
+
+#content {
+    display: flex;
+}
+
+h1 {
+    color: white;
+    font-size: 64px;
+    font-family: "Knewave", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+    /* I'm using border attributes to help me visually debug things */
+    /* border: black 2px solid; */
+    margin-top: 0;
 }
