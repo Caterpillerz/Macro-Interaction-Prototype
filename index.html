@@ -10,7 +10,7 @@
         <!-- Links to different fonts we will be using -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Knewave&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Knewave&display=swap" rel="stylesheet">
     </head>
     <body>
         <div id="content">
@@ -19,18 +19,28 @@
                 <div>
                     <video id="video" width="240" height="180" autoplay></video>
                 </div>
-                <h2>Sample pose markers (one person only)</h2>
-                <h3>15 (left wrist) and 16 (right wrist), x and y values only</h3>
-                <p id="left-wrist"></p>
-                <p id="right-wrist"></p>
-                <p>
-                    Find map
-                    <a
-                        href="https://developers.google.com/edge/mediapipe/solutions/vision/pose_landmarker#pose_landmarker_model"
-                        target="_blank"
-                        >here</a
-                    >.
-                </p>
+                <h2>Take to the skies!</h2>
+                    <ul>
+                        <p>POSE 1 to strafe left</p>
+                        <p>POSE 2 to strafe left</p>
+                        <p>POSE 2 to fly upward</p>
+                        <p>POSE 2 to dive downward</p>
+                    </ul>
+                <div id="debug-area">
+                    <h3>15 (left wrist) and 16 (right wrist), x and y values only</h3>
+                    <ul>
+                        <li id="left-wrist">POSE 1 to strafe left</li>
+                        <li id="right wrist">POSE 2 to strafe left</li>
+                        <li>
+                            Find map
+                            <a
+                                href="https://developers.google.com/edge/mediapipe/solutions/vision/pose_landmarker#pose_landmarker_model"
+                                target="_blank"
+                                >here</a
+                            >.
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Display the game -->

@@ -1,22 +1,44 @@
 /* This styles index.html */
 
 body {
-    background: linear-gradient(rgb(157, 222, 250) 90%, rgb(91, 176, 255) 99%);
+    background: linear-gradient(rgb(157, 222, 250) 85%, rgb(255, 168, 98) 99%);
     /* ignore this for now */
     /* background: linear-gradient(#6ed1ff, #ffb5a1); */
 }
 
 #video-section {
     width: 240px;
+    font-family: "Knewave", system-ui;
+    font-weight: 400;
     /* border: black 2px solid; */
+}
+
+#video-section h2, h3 {
+    font-family: "Knewave", system-ui;
+    font-weight: 200;
+    text-align: center;
+}
+
+#video-section p, li {
+    font-family: "Google Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "GRAD" 0;
+}
+
+video {
+    border-radius: 25px;
+	border: 3px solid white;
+    margin-top: 40%;
 }
 
 #game-section {
     width: 1200px;
     height: 800px;
     /* centering the game horizontally for now. */
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 130px;
     /* border: black 2px solid; */
 }
 
@@ -30,7 +52,7 @@ iframe {
 }
 
 h1 {
-    color: white;
+    color: rgb(255,255,255);
     font-size: 64px;
     font-family: "Knewave", system-ui;
     font-weight: 400;

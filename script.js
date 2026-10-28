@@ -69,6 +69,28 @@ function processPose(results) {
     leftWristDisplay.textContent = `Left wrist x: ${leftWrist.x.toFixed(2)} y: ${leftWrist.y.toFixed(2)}`
     rightWristDisplay.textContent = `Right wrist x: ${rightWrist.x.toFixed(2)} y: ${rightWrist.y.toFixed(2)}`
   }
+
+  // call these functions to process the poses
+  strafeLeft(results);
+  strafeRight(results);
+  flyUp(results);
+  diveDown(results);
+}
+
+function strafeLeft(results) {
+
+}
+
+function strafeRight(results) {
+
+}
+
+function flyUp(results) {
+
+}
+
+function diveDown(results) {
+
 }
 
 startCamera();
