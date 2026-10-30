@@ -10,8 +10,7 @@
         <!-- Links to different fonts we will be using -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Knewave&display=swap" rel="stylesheet">
-    </head>
+        <link href="https://fonts.googleapis.com/css2?family=Cagliostro&family=Knewave&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">    </head>
     <body>
         <div id="content">
             <!-- The section that has the video playing -->
@@ -20,12 +19,12 @@
                     <video id="video" width="240" height="180" autoplay></video>
                 </div>
                 <h2>Take to the skies!</h2>
-                    <ul>
-                        <p>POSE 1 to strafe left</p>
-                        <p>POSE 2 to strafe left</p>
-                        <p>POSE 2 to fly upward</p>
-                        <p>POSE 2 to dive downward</p>
-                    </ul>
+                <ul>
+                    <p><img src="assets/leanLeft.png" width="35px"> <span>to strafe left</span></p>
+                    <p><img src="assets/leanRight.png" width="35px"> <span>to strafe right</span></p>
+                    <p><img src="assets/armsUp.png" width="30px"> <span>to fly upward</span></p>
+                    <p><img src="assets/armsDown.png" width="30px"> <span>to dive downward</span></p>
+                </ul>
                 <div id="debug-area">
                     <h3>15 (left wrist) and 16 (right wrist), x and y values only</h3>
                     <ul>
@@ -47,8 +46,22 @@
             <div id="game-section">
                 <iframe src="game.html" width="1200px" height="800px"></iframe>
             </div>
+
+            <!-- Display the different modes-->
+            <div id="modes-section">
+                <h2>You are currently flying!</h2>
+                <p><button>Flying</button></p>
+                <p><button>Swimming</button></p>
+            </div>
         </div>
+
         <h1>Flying Game</h1>
+
+        <!-- There will be the sound of wind to enhance the feeling of flying.
+        The mp3 file's called "Wind Lake SFX" by SoundReality on pixabay.com -->
+        <audio autoplay loop>
+            <source src="audio/wind.mp3">
+        </audio>
 
         <!-- the script for the video -->
         <script type="module" src="script.js"></script>
