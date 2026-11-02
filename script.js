@@ -120,4 +120,29 @@ function diveDown(command) {
   if (command !== "down") return;
 }
 
+// switch the website to flying mode
+function switchToFlying() {
+  let body = document.querySelector("body");
+  let flyAudio = document.getElementById("wind-sound");
+  let swimAudio = document.getElementById("water-sound");
+  body.style.background = "linear-gradient(rgb(157, 222, 250) 85%, rgb(255, 168, 98) 99%)";
+  swimAudio.pause();
+  flyAudio.play();
+}
+
+// switch the website to swimming mode
+function switchToSwimming() {
+  let body = document.querySelector("body");
+  let swimAudio = document.getElementById("water-sound");
+  let flyAudio = document.getElementById("wind-sound");
+  body.style.background = "linear-gradient(rgb(47, 102, 219) 85%, rgb(0, 54, 170) 99%";
+  flyAudio.pause();
+  swimAudio.play();
+}
+
 startCamera();
+switchToFlying();
+
+// adding event listeners for the buttons
+document.getElementById("swim-button").addEventListener("click", switchToSwimming);
+document.getElementById("fly-button").addEventListener("click", switchToFlying);

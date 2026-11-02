@@ -50,8 +50,8 @@
             <!-- Display the different modes-->
             <div id="modes-section">
                 <h2>You are currently flying!</h2>
-                <p><button>Flying</button></p>
-                <p><button>Swimming</button></p>
+                <p><button id="fly-button">Flying</button></p>
+                <p><button id="swim-button">Swimming</button></p>
             </div>
         </div>
 
@@ -59,11 +59,15 @@
 
         <!-- There will be the sound of wind to enhance the feeling of flying.
         The mp3 file's called "Wind Lake SFX" by SoundReality on pixabay.com -->
-        <audio autoplay loop>
+        <audio id="wind-sound" autoplay loop>
             <source src="audio/wind.mp3">
         </audio>
 
-        <!-- the script for the video -->
+        <audio id="water-sound" autoplay loop>
+            <source src="audio/water.mp3">
+        </audio>
+
+        <!-- the script for the video, + other site features -->
         <script type="module" src="script.js"></script>
     </body>
 </html>
