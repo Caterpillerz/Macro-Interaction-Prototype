@@ -16,7 +16,7 @@ body {
     font-size: 28px;
 }
 
-#video-section p, li {
+p, li, button {
     font-family: "Lato", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -71,6 +71,19 @@ button {
     height: 60px;
     border-radius: 40px;
     border: none;
+    font-size: 18px;
+}
+
+/*
+.butt:hover {
+    color: black;
+    background-color: rgb(255, 255, 169);
+}
+*/
+
+.b2:hover {
+    color: black;
+    background-color: rgb(255, 255, 169);
 }
 
 #content {
