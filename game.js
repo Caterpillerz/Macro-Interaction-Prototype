@@ -8,16 +8,26 @@ var particles = [];
 var speed;
 let cloud;
 
+// import { getMode } from "./script.js";
+
+// i HAVE to name this preload() apparently.
+// it forces all the images to be loaded first
+// before the rest of the js / app can create instances
+// of them in setup
+async function preload() {
+  cloud = await loadImage("/assets/Clouds.png");
+}
+
 // creates the canvas where the game happens.
 // The iframe places it in the desired spot.
-async function setup() {
+function setup() {
   createCanvas(1200, 800);
   // for loop had 800 stars before
   // we do not need a whole lot of clouds
   for (var i = 0; i < 50; i++) {
     // load the image for the cloud, and then call the Cloud()
     // function to actually show the cloud image
-    cloud = await loadImage("/assets/Clouds.png");
+    // cloud = await loadImage("/assets/Clouds.png");
     particles[i] = new Cloud();
   }
 }
@@ -67,8 +77,5 @@ function Cloud() {
     var py = map(this.y / this.pz, 0, 1, 0, height);
 
     this.pz = this.z;
-
-    // stroke(255);
-
   }
 }

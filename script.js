@@ -7,6 +7,7 @@
 // then, open your browser window at 127.0.0.1:8000
 
 // again, starting with professor guy's example code
+var mode = "flying";
 
 import {
   FilesetResolver,
@@ -124,32 +125,78 @@ function diveDown(command) {
 function switchToFlying() {
   let body = document.querySelector("body");
   let title = document.querySelector("h1");
+  let vidSect = document.getElementById("video-section");
+  let vidSectHeading = document.querySelector("#video-section > h2");
+  let vidSectControls = document.querySelector("#video-section > ul");
+  let flyGame = document.getElementById("game-section");
+  let swimGame = document.getElementById("game2-section");
+  let vidSectControlText = document.querySelectorAll("#video-section p");
+  let modeSect = document.getElementById("modes-section");
+  let modeSectHeading = document.querySelector("#modes-section > h2");
   let flyAudio = document.getElementById("wind-sound");
   let swimAudio = document.getElementById("water-sound");
 
   body.style.background = "linear-gradient(rgb(157, 222, 250) 85%, rgb(255, 168, 98) 99%)";
   title.textContent = "Flying Game";
+  vidSectHeading.textContent = "Take to the skies!"
+  modeSectHeading.textContent = "You're currently flying!"
 
   swimAudio.pause();
   flyAudio.play();
 
   title.style = "color: white; font-size: 72px; font-family: \"Knewave\", system-ui; font-weight: 400; font-style: normal; text-align: center; margin-top: 0;";
+  vidSect.style.backgroundColor = "white";
+  modeSect.style.backgroundColor = "white";
+  vidSectHeading.style = "color: #ff7700;";
+  modeSectHeading.style = "color: #ff7700;";
+  for (let control of vidSectControlText) {
+    control.style = "color: #ce2900;";
+  }
+  flyGame.style.display = "block";
+  swimGame.style.display = "none";
+
+  mode = "flying";
 }
 
 // switch the website to swimming mode
 function switchToSwimming() {
   let body = document.querySelector("body");
   let title = document.querySelector("h1");
+  let vidSect = document.getElementById("video-section");
+  let vidSectHeading = document.querySelector("#video-section > h2");
+  let vidSectControls = document.querySelector("#video-section > ul");
+  let flyGame = document.getElementById("game-section");
+  let swimGame = document.getElementById("game2-section");
+  let vidSectControlText = document.querySelectorAll("#video-section p");
+  let modeSect = document.getElementById("modes-section");
+  let modeSectHeading = document.querySelector("#modes-section > h2");
   let swimAudio = document.getElementById("water-sound");
   let flyAudio = document.getElementById("wind-sound");
 
   body.style.background = "linear-gradient(rgb(47, 102, 219) 85%, rgb(0, 54, 170) 99%";
   title.textContent = "Swimming Game";
+  vidSectHeading.textContent = "Dive into the sea!"
+  modeSectHeading.textContent = "You're currently swimming!"
 
   flyAudio.pause();
   swimAudio.play();
 
-  title.style = "color: white; font-size: 72px; font-family: \"Flavors\", cursive; font-weight: 400; font-style: normal; text-align: center; margin-top: 0;";
+  title.style = "color: #0f183b; font-size: 72px; font-family: \"Flavors\", cursive; font-weight: 400; font-style: normal; text-align: center; margin-top: 0;";
+  vidSect.style.backgroundColor = "#0f183b";
+  modeSect.style.backgroundColor = "#0f183b";
+  vidSectHeading.style = "color: #44e65a";
+  modeSectHeading.style = "color: #44e65a";
+  for (let control of vidSectControlText) {
+    control.style = "color: #20bb73";
+  }
+  flyGame.style.display = "none";
+  swimGame.style.display = "block";
+
+  mode = "swimming";
+}
+
+export function getMode() {
+  return mode;
 }
 
 startCamera();
