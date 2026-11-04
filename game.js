@@ -4,29 +4,21 @@
 // Code for: https://youtu.be/17WoOqgXsRM
 // using this as a template to build the flying
 
-var stars = [];
-
+var particles = [];
 var speed;
+let cloud;
 
 // creates the canvas where the game happens.
 // The iframe places it in the desired spot.
-function setup() {
+async function setup() {
   createCanvas(1200, 800);
-
-  // just ignore this for now
-//   let sky = createImage(600, 600);
-//   sky.loadPixels();
-//   for (let i = 0; i < sky.pixels.length; i += 1) {
-//     sky.pixels[i] = 0;
-//     sky.pixels[i + 1] = 0;
-//     sky.pixels[i + 2] = 0;
-//     sky.pixels[i + 3] = 255;
-//   }
-//   sky.updatePixels();
-//   image(sky, 17, 17);
-
-  for (var i = 0; i < 800; i++) {
-    stars[i] = new Star();
+  // for loop had 800 stars before
+  // we do not need a whole lot of clouds
+  for (var i = 0; i < 50; i++) {
+    // load the image for the cloud, and then call the Cloud()
+    // function to actually show the cloud image
+    cloud = await loadImage("/assets/Clouds.png");
+    particles[i] = new Cloud();
   }
 }
 
@@ -35,13 +27,13 @@ function draw() {
   speed = map(mouseX, 0, width, 0, 50);
   background(157, 222, 250);
   translate(width / 2, height / 2);
-  for (var i = 0; i < stars.length; i++) {
-    stars[i].update();
-    stars[i].show();
+  for (var i = 0; i < particles.length; i++) {
+    particles[i].update();
+    particles[i].show();
   }
 }
 
-function Star() {
+function Cloud() {
   this.x = random(-width, width);
   this.y = random(-height, height);
   this.z = random(width);
@@ -58,22 +50,25 @@ function Star() {
   }
 
   this.show = function() {
-    fill(255);
-    noStroke();
-
     var sx = map(this.x / this.z, 0, 1, 0, width);
     var sy = map(this.y / this.z, 0, 1, 0, height);
 
-    var r = map(this.z, 0, width, 16, 0);
-    ellipse(sx, sy, r, r);
+    // the z value controls the r because getting bigger
+    // = moving forward in z. Making the last parameter
+    // solves th giant clouds flashing us problem because
+    // I think having the last param as 0 caused a division by 0
+    // which made images infinitely big when they travel enough z??
+    var r = map(this.z, 0, width, 256, 1);
+    // stretching the clouds' width a little bit at spawn
+    // because I think that makes them look better / more cloud-like
+    image(cloud, sx, sy, r*1.75, r);
 
     var px = map(this.x / this.pz, 0, 1, 0, width);
     var py = map(this.y / this.pz, 0, 1, 0, height);
 
     this.pz = this.z;
 
-    stroke(255);
-    line(px, py, sx, sy);
+    // stroke(255);
 
   }
 }

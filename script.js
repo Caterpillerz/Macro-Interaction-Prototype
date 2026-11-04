@@ -123,9 +123,12 @@ function diveDown(command) {
 // switch the website to flying mode
 function switchToFlying() {
   let body = document.querySelector("body");
+  let title = document.querySelector("h1");
   let flyAudio = document.getElementById("wind-sound");
   let swimAudio = document.getElementById("water-sound");
+
   body.style.background = "linear-gradient(rgb(157, 222, 250) 85%, rgb(255, 168, 98) 99%)";
+  title.textContent = "Flying Game";
   swimAudio.pause();
   flyAudio.play();
 }
@@ -133,9 +136,12 @@ function switchToFlying() {
 // switch the website to swimming mode
 function switchToSwimming() {
   let body = document.querySelector("body");
+  let title = document.querySelector("h1");
   let swimAudio = document.getElementById("water-sound");
   let flyAudio = document.getElementById("wind-sound");
+
   body.style.background = "linear-gradient(rgb(47, 102, 219) 85%, rgb(0, 54, 170) 99%";
+  title.textContent = "Swimming Game";
   flyAudio.pause();
   swimAudio.play();
 }
