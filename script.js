@@ -129,8 +129,11 @@ function switchToFlying() {
 
   body.style.background = "linear-gradient(rgb(157, 222, 250) 85%, rgb(255, 168, 98) 99%)";
   title.textContent = "Flying Game";
+
   swimAudio.pause();
   flyAudio.play();
+
+  title.style = "color: white; font-size: 72px; font-family: \"Knewave\", system-ui; font-weight: 400; font-style: normal; text-align: center; margin-top: 0;";
 }
 
 // switch the website to swimming mode
@@ -142,8 +145,11 @@ function switchToSwimming() {
 
   body.style.background = "linear-gradient(rgb(47, 102, 219) 85%, rgb(0, 54, 170) 99%";
   title.textContent = "Swimming Game";
+
   flyAudio.pause();
   swimAudio.play();
+
+  title.style = "color: white; font-size: 72px; font-family: \"Flavors\", cursive; font-weight: 400; font-style: normal; text-align: center; margin-top: 0;";
 }
 
 startCamera();
