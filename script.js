@@ -157,7 +157,7 @@ function switchToFlying() {
     control.style = "color: #ce2900;";
   }
   for (let b of buttons) {
-    b.style = "color: #ce2900; background-color: #b1b1b1;";
+    b.style = "color: #ce2900; background-color: #d5e0e6;";
   }
   flyGame.style.display = "block";
   swimGame.style.display = "none";
