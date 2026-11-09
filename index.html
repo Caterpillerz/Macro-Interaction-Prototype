@@ -16,14 +16,16 @@
             <!-- The section that has the video playing -->
             <div id="video-section">
                 <div>
-                    <video id="video" width="240" height="180" autoplay></video>
+                    <video id="video" width="240" height="180" autoplay playsinline style="transform: scaleX(-1);"></video>
                 </div>
+                <p id="current-pose" class="wings-hint">Camera starting…</p>
                 <h2>Take to the skies!</h2>
+                <p class="wings-hint">Hold your arms out like wings to fly</p>
                 <ul>
-                    <p><img src="assets/leanLeft.png" width="35px"> <span>to strafe left</span></p>
-                    <p><img src="assets/leanRight.png" width="35px"> <span>to strafe right</span></p>
-                    <p><img src="assets/armsUp.png" width="30px"> <span>to fly upward</span></p>
-                    <p><img src="assets/armsDown.png" width="30px"> <span>to dive downward</span></p>
+                    <p><img src="assets/leanLeft.png" width="35px"> <span>tilt your wings left to strafe left</span></p>
+                    <p><img src="assets/leanRight.png" width="35px"> <span>tilt your wings right to strafe right</span></p>
+                    <p><img src="assets/armsUp.png" width="30px"> <span>raise both wings to fly upward</span></p>
+                    <p><img src="assets/armsDown.png" width="30px"> <span>lower both wings to dive downward</span></p>
                 </ul>
                 <!--
                 <div id="debug-area">

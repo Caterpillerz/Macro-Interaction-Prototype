@@ -27,7 +27,7 @@ import {
   FilesetResolver,
   PoseLandmarker
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.mjs";
-import { classifyPose } from "./controls.js";
+import { readPose } from "./controls.js";
 
 const vision = await FilesetResolver.forVisionTasks(
   "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
@@ -78,16 +78,19 @@ async function startCamera() {
 let lastVideoTime = -1;
 
 function renderLoop() {
-  if (video.currentTime !== lastVideoTime) {
-    const timeStamp = performance.now();
+  // Schedule the next frame first so one bad frame can't stop camera control.
+  requestAnimationFrame(renderLoop);
+  if (video.currentTime === lastVideoTime) return;
+  lastVideoTime = video.currentTime;
+  try {
     const poseLandmarkerResults = poseLandmarker.detectForVideo(
       video,
-      timeStamp
+      performance.now()
     );
     processPose(poseLandmarkerResults);
-    lastVideoTime = video.currentTime;
+  } catch (err) {
+    console.error("Pose frame failed", err);
   }
-  requestAnimationFrame(renderLoop);
 }
 
 // A pose has to be seen for a few frames in a row before it counts. This stops
@@ -101,16 +104,22 @@ function processPose(results) {
   const hasPerson = results.landmarks.length > 0;
   const landmarks = hasPerson ? results.landmarks[0] : null;
 
-  if (hasPerson) {
+  // Debug readouts — only written if the debug panel in index.html is enabled.
+  // (Writing to missing elements used to crash this function every frame,
+  // which stopped the pose from ever reaching the game.)
+  const leftWristEl = document.getElementById("left-wrist");
+  const rightWristEl = document.getElementById("right-wrist");
+  if (hasPerson && leftWristEl && rightWristEl) {
     const leftWrist = landmarks[15];
     const rightWrist = landmarks[16];
-    document.getElementById("left-wrist").textContent =
+    leftWristEl.textContent =
       `Left wrist x: ${leftWrist.x.toFixed(2)} y: ${leftWrist.y.toFixed(2)}`;
-    document.getElementById("right-wrist").textContent =
+    rightWristEl.textContent =
       `Right wrist x: ${rightWrist.x.toFixed(2)} y: ${rightWrist.y.toFixed(2)}`;
   }
 
-  const seen = classifyPose(landmarks, video.videoWidth || 640, video.videoHeight || 480);
+  const pose = readPose(landmarks, video.videoWidth || 640, video.videoHeight || 480);
+  const seen = pose.command;
   if (seen === candidate) {
     candidateFrames++;
   } else {
@@ -119,7 +128,17 @@ function processPose(results) {
   }
   if (candidateFrames >= FRAMES_TO_CONFIRM) command = candidate;
 
-  document.getElementById("current-pose").textContent = `Current pose: ${command}`;
+  const poseEl = document.getElementById("current-pose");
+  if (poseEl) {
+    const labels = {
+      none: "Flying straight", left: "← Strafing left", right: "Strafing right →",
+      up: "↑ Flying up", down: "↓ Diving down",
+    };
+    if (!hasPerson) poseEl.textContent = "Step into view of the camera";
+    else if (pose.left === null || pose.right === null)
+      poseEl.textContent = "Can't see both arms — step back a little";
+    else poseEl.textContent = labels[command];
+  }
 
   // call these functions to process the poses
   strafeLeft(command);

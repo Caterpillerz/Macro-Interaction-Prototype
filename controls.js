@@ -1,61 +1,64 @@
-// Turns MediaPipe pose landmarks into one flight command.
+// Turns MediaPipe pose landmarks into one flight command, matching the
+// pictures on the page (assets/leanLeft, leanRight, armsUp, armsDown):
 //
-//   Arms down / relaxed ............ "none"  (keep flying straight)
-//   LEFT hand raised, right down ... "left"  (strafe left)
-//   RIGHT hand raised, left down ... "right" (strafe right)
-//   BOTH hands raised .............. "up"    (fly upward)
-//   Arms out to the sides (T-pose) . "down"  (dive downward)
+//   Arms out like wings, level ..... "none"  (keep flying straight)
+//   Lean left  (left wing lower) ... "left"  (strafe left)
+//   Lean right (right wing lower) .. "right" (strafe right)
+//   Both arms raised ............... "up"    (fly upward)
+//   Both arms lowered .............. "down"  (dive downward)
 //
 // "Left" and "right" are from the player's point of view. The camera preview is
-// mirrored in index.html, so your left hand appears on the left of the preview.
+// mirrored, so your left arm appears on the left of the preview.
 //
-// MediaPipe landmark indexes: 11 = left shoulder, 12 = right shoulder,
-// 15 = left wrist, 16 = right wrist. x and y are 0..1 across the image.
+// Each arm is measured as an ANGLE from the shoulder: 0° = straight out to the
+// side, +90° = straight up, -90° = straight down. Angles don't depend on how far
+// you stand from the camera, and they work whether your arms go out to the
+// sides or forward towards the camera (like the up / down pictures).
+// If a wrist is out of the camera frame, the elbow is used instead.
+//
+// MediaPipe landmark indexes: 11/12 = left/right shoulder,
+// 13/14 = left/right elbow, 15/16 = left/right wrist. x, y are 0..1.
 
-const HAND_UP = 0.6;      // wrist this far above the shoulder counts as "raised"
-const HAND_LOW = 0.3;     // the other wrist must be below this to count as "not raised"
-const LEVEL = 0.5;        // wrist within this of shoulder height counts as "level"
-const REACH = 1.1;        // wrist this far out from the shoulder counts as "arm out"
+const LEAN_ANGLE = 25;    // one arm this many degrees lower than the other = lean
+const UP_ANGLE = 30;      // both arms this far above level = fly up
+const DOWN_ANGLE = -35;   // both arms this far below level = dive
 
-// All distances are measured in shoulder widths, so the result does not depend
-// on how far you stand from the camera.
-export function classifyPose(landmarks, videoWidth = 640, videoHeight = 480) {
-  if (!landmarks) return "none";
+const seen = (p, min) => p && (p.visibility === undefined || p.visibility >= min);
+
+// Angle of one arm in degrees, or null if we can't see the arm.
+function armAngle(shoulder, elbow, wrist, w, h) {
+  const hand = seen(wrist, 0.3) ? wrist : seen(elbow, 0.3) ? elbow : null;
+  if (!hand) return null;
+  const dx = Math.abs(hand.x - shoulder.x) * w;
+  const up = (shoulder.y - hand.y) * h; // image y grows downward
+  return (Math.atan2(up, dx) * 180) / Math.PI;
+}
+
+// Returns the command plus the two arm angles (handy for the on-screen readout).
+export function readPose(landmarks, videoWidth = 640, videoHeight = 480) {
+  const result = { command: "none", left: null, right: null };
+  if (!landmarks) return result;
 
   const leftShoulder = landmarks[11];
   const rightShoulder = landmarks[12];
-  const leftWrist = landmarks[15];
-  const rightWrist = landmarks[16];
+  if (!seen(leftShoulder, 0.5) || !seen(rightShoulder, 0.5)) return result;
 
-  const seen = (p, min) => p && (p.visibility === undefined || p.visibility >= min);
-  if (!seen(leftShoulder, 0.5) || !seen(rightShoulder, 0.5)) return "none";
-  if (!seen(leftWrist, 0.4) || !seen(rightWrist, 0.4)) return "none";
+  const left = armAngle(leftShoulder, landmarks[13], landmarks[15], videoWidth, videoHeight);
+  const right = armAngle(rightShoulder, landmarks[14], landmarks[16], videoWidth, videoHeight);
+  result.left = left;
+  result.right = right;
+  if (left === null || right === null) return result;
 
-  const shoulderWidth = Math.hypot(
-    (leftShoulder.x - rightShoulder.x) * videoWidth,
-    (leftShoulder.y - rightShoulder.y) * videoHeight,
-  );
-  if (shoulderWidth < 10) return "none";
+  // Leaning: one wing clearly lower than the other.
+  if (right - left > LEAN_ANGLE) result.command = "left";
+  else if (left - right > LEAN_ANGLE) result.command = "right";
+  // Both arms together: raised = climb, lowered = dive.
+  else if (left > UP_ANGLE && right > UP_ANGLE) result.command = "up";
+  else if (left < DOWN_ANGLE && right < DOWN_ANGLE) result.command = "down";
 
-  // positive = wrist is above the shoulder (image y grows downward)
-  const lift = (wrist, shoulder) =>
-    ((shoulder.y - wrist.y) * videoHeight) / shoulderWidth;
-  const reach = (wrist, shoulder) =>
-    (Math.abs(wrist.x - shoulder.x) * videoWidth) / shoulderWidth;
+  return result;
+}
 
-  const left = lift(leftWrist, leftShoulder);
-  const right = lift(rightWrist, rightShoulder);
-  const leftUp = left > HAND_UP;
-  const rightUp = right > HAND_UP;
-
-  if (leftUp && rightUp) return "up";
-  if (leftUp && right < HAND_LOW) return "left";
-  if (rightUp && left < HAND_LOW) return "right";
-
-  const bothLevel = Math.abs(left) < LEVEL && Math.abs(right) < LEVEL;
-  const bothOut =
-    reach(leftWrist, leftShoulder) > REACH && reach(rightWrist, rightShoulder) > REACH;
-  if (bothLevel && bothOut) return "down";
-
-  return "none";
+export function classifyPose(landmarks, videoWidth, videoHeight) {
+  return readPose(landmarks, videoWidth, videoHeight).command;
 }

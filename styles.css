@@ -27,6 +27,8 @@ p, li, button {
 }
 
 video {
+    /* mirror the preview so your left hand shows on the left, like a mirror */
+    transform: scaleX(-1);
     border-radius: 25px;
     margin-top: 25px;
     margin-left: 25px;
@@ -111,4 +113,10 @@ h1 {
     /* I'm using border attributes to help me visually debug things */
     /* border: black 2px solid; */
     margin-top: 0;
+}
+
+#video-section p.wings-hint {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 25px 10px;
 }
