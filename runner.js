@@ -10,7 +10,7 @@
 // you". Far away things bunch up in the middle (the horizon) and spread out
 // as they get close.
 const Z_HIT = 60;           // depth where obstacles reach the player
-const STEER_SPEED = 8;      // how fast steering moves you
+const STEER_SPEED = 24;      // how fast steering moves you
 const CAM_LIMIT = 900;      // how far you can wander from the middle
 let PLAYER_Y;               // player sits near the bottom (set in setup)
 
