@@ -1,81 +1,29 @@
-// Daniel Shiffman
-// http://codingtra.in
-// http://patreon.com/codingtrain
-// Code for: https://youtu.be/17WoOqgXsRM
-// using this as a template to build the flying
+// The flying game. This only describes how it looks; the game itself is in
+// runner.js, which is shared with the swimming game.
 
-var particles = [];
-var speed;
-let cloud;
+const GAME = {
+  background: [157, 222, 250],
+  maxSpeed: 15,                      // top speed (mouse at the far right)
+  verb: "flew",
+  restartWord: "fly",
+  obstacleName: "Obstacles",
 
-// import { getMode } from "./script.js";
+  // the bird you control, at the bottom of the screen
+  player: { src: "assets/Mainbird.png", size: 150, hitW: 55, hitH: 50 },
 
-// i HAVE to name this preload() apparently.
-// it forces all the images to be loaded first
-// before the rest of the js / app can create instances
-// of them in setup
-async function preload() {
-  cloud = await loadImage("/assets/Clouds.png");
-}
+  // see-through clouds in the background. These can't hit you.
+  scenery: { src: "assets/Clouds.png", count: 40, maxSize: 256, aspect: 1.75, alpha: 0.6 },
 
-// creates the canvas where the game happens.
-// The iframe places it in the desired spot.
-function setup() {
-  createCanvas(1200, 800);
-  // for loop had 800 stars before
-  // we do not need a whole lot of clouds
-  for (var i = 0; i < 50; i++) {
-    // load the image for the cloud, and then call the Cloud()
-    // function to actually show the cloud image
-    // cloud = await loadImage("/assets/Clouds.png");
-    particles[i] = new Cloud();
-  }
-}
+  // dark storm clouds, planes and rockets fly at you. Hitting one ends the game.
+  // The plane and rocket pictures have empty space around them, so they're
+  // drawn a bit bigger (scale) and only the middle part counts as a hit
+  // (hitW / hitH = fraction of the picture's width / height from the centre).
+  obstacles: [
+    { src: "assets/Clouds.png", tint: [120, 125, 140] },
+    { src: "assets/planeobstacle.png", scale: 1.4, hitW: 0.33, hitH: 0.22 },
+    { src: "assets/rocketobstacle.png", scale: 1.4, hitW: 0.2, hitH: 0.32 },
+  ],
+  obstacleSize: 260,                 // how big obstacles get when they reach you
 
-// draws each star (or cloud or bubble or wave, etc in our case)
-function draw() {
-  speed = map(mouseX, 0, width, 0, 50);
-  background(157, 222, 250);
-  translate(width / 2, height / 2);
-  for (var i = 0; i < particles.length; i++) {
-    particles[i].update();
-    particles[i].show();
-  }
-}
-
-function Cloud() {
-  this.x = random(-width, width);
-  this.y = random(-height, height);
-  this.z = random(width);
-  this.pz = this.z;
-
-  this.update = function() {
-    this.z = this.z - speed;
-    if (this.z < 1) {
-      this.z = width;
-      this.x = random(-width, width);
-      this.y = random(-height, height);
-      this.pz = this.z;
-    }
-  }
-
-  this.show = function() {
-    var sx = map(this.x / this.z, 0, 1, 0, width);
-    var sy = map(this.y / this.z, 0, 1, 0, height);
-
-    // the z value controls the r because getting bigger
-    // = moving forward in z. Making the last parameter
-    // solves th giant clouds flashing us problem because
-    // I think having the last param as 0 caused a division by 0
-    // which made images infinitely big when they travel enough z??
-    var r = map(this.z, 0, width, 256, 1);
-    // stretching the clouds' width a little bit at spawn
-    // because I think that makes them look better / more cloud-like
-    image(cloud, sx, sy, r*1.75, r);
-
-    var px = map(this.x / this.pz, 0, 1, 0, width);
-    var py = map(this.y / this.pz, 0, 1, 0, height);
-
-    this.pz = this.z;
-  }
-}
+  hud: { box: [255, 255, 255, 190], text: [206, 41, 0] },
+};

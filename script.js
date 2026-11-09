@@ -33,15 +33,30 @@ const vision = await FilesetResolver.forVisionTasks(
   "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
 );
 
-const poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
-  baseOptions: {
-    modelAssetPath: "./models/pose_landmarker_full.task",
-  },
-  runningMode: "VIDEO"
-});
+// PERFORMANCE: run pose detection on the graphics card (GPU). On the CPU it
+// shares time with the game and slows it down. Falls back to the CPU if the
+// browser can't use the GPU.
+async function createPoseLandmarker(delegate) {
+  return PoseLandmarker.createFromOptions(vision, {
+    baseOptions: {
+      modelAssetPath: "./models/pose_landmarker_full.task",
+      delegate,
+    },
+    runningMode: "VIDEO"
+  });
+}
+
+let poseLandmarker;
+try {
+  poseLandmarker = await createPoseLandmarker("GPU");
+} catch (err) {
+  console.warn("GPU pose detection unavailable, using CPU", err);
+  poseLandmarker = await createPoseLandmarker("CPU");
+}
 
 const video = document.getElementById("video");
 const gameFrame = document.querySelector("#game-section iframe");
+const swimFrame = document.querySelector("#game2-section iframe");
 
 async function startCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
@@ -115,6 +130,7 @@ function processPose(results) {
   // Tell the game what the pilot is doing. Sent every frame so the game can
   // tell the camera is still alive (it falls back to arrow keys otherwise).
   gameFrame.contentWindow.postMessage({ type: "pose", command }, "*");
+  swimFrame.contentWindow.postMessage({ type: "pose", command }, "*");
 }
 
 // The game does the actual steering (see game.js). These hooks stay here in case
